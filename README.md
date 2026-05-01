@@ -1,80 +1,144 @@
-# Communication Trace Record Specification v0.1
+# CTR-ID Unified Protocol v0.1
 
-Communication Trace Record (CTR) v0.1 is a draft specification for recording communication-derived trace events across humans, AIs, and agents.
+CTR-ID Unified Protocol v0.1 is a draft specification for a minimal identifier profile used to connect communication trace records across events, sessions, threads, conversations, structures, and derived artifacts.
 
-It defines a minimal, machine-readable event format for capturing how meaning is referenced, transformed, summarized, reused, and circulated.
+It defines interoperable identifier semantics for trace-aware systems without forcing a full provenance graph into a single record.
 
-This repository focuses on the recording layer of Communication Royalty OS. It does not directly calculate monetary royalties. Instead, it provides the trace basis that later systems may use for gratitude, credit, trust, audit, attribution, influence analysis, or royalty candidate review.
+This repository currently focuses on the CTR-ID layer only.
 
 ---
 
 ## Why this repository exists
 
-In AI-native environments, value is increasingly generated not only by static works, but by communication processes such as:
+Trace-oriented systems often fail not because they lack records, but because they lack consistent identifiers.
 
-- referencing
-- summarizing
-- responding
-- transforming
-- reusing
-- influencing downstream outputs
+Different systems may record:
 
-CTR v0.1 exists to make those communication-derived traces visible, structured, and interoperable.
+- the serialized record itself
+- the traceable event
+- the communication object
+- the larger conversation
+- the persistent semantic structure
+- the derived artifact
 
-The goal is **not** to charge for communication itself.  
-The goal is to record how communication contributes to later meaning generation, so that downstream systems can decide whether and how value should circulate.
+If these are mixed together, downstream uses become unstable.
+
+CTR-ID v0.1 exists to separate those layers cleanly and provide a minimal identifier profile that can later support:
+
+- attribution
+- audit
+- trust systems
+- gratitude systems
+- influence mapping
+- royalty candidate review
+- adjacent communication trace standards
 
 ---
 
 ## Scope
 
-This repository defines a trace record format for communication events.
+CTR-ID v0.1 defines a minimal interoperable identifier profile.
 
-CTR v0.1 covers:
+It covers:
 
-- event-level communication trace records
-- actor / counterparty / action modeling
-- input and output context
-- trace assessment
-- governance metadata
-- optional settlement hooks for downstream circulation layers
+- record-level identifiers
+- trace-event identifiers
+- parent and multi-source lineage identifiers
+- communication object identifiers
+- conversation-root identifiers
+- artifact identifiers
+- structure reference identifiers
 
-CTR v0.1 does **not** cover:
+It does **not** cover:
 
-- direct message pricing
-- automatic legal ownership determination
-- mandatory monetary settlement
-- full cryptographic signature infrastructure
-- full provenance graph serialization in a single record
+- legal ownership determination
+- monetary settlement
+- full provenance graph serialization
+- cryptographic signature infrastructure
+- identity verification infrastructure
+- mandatory global registry behavior
 
 ---
 
 ## Core idea
 
-A Communication Trace Record answers a simple but important question:
+CTR-ID answers a basic structural question:
 
-> What happened, who acted, what sources were involved, what output was produced, and how strongly did this event contribute to later meaning generation?
+> What exactly is being identified?
 
-That makes CTR a foundational layer for:
+It distinguishes between:
 
-- Communication Royalty OS
-- gratitude systems
-- trust systems
-- attribution systems
-- audit and accountability pipelines
-- communication influence mapping
+- the **record instance**
+- the **trace event**
+- the **communication object**
+- the **conversation lineage**
+- the **semantic structure**
+- the **derived artifact**
+
+This makes downstream trace systems more stable, more composable, and easier to audit.
 
 ---
 
 ## Design principles
 
-- Communication itself is not a billing target.
-- Meaning generation is the primary value source.
-- Trace does not automatically imply ownership.
-- Trace does not automatically imply monetary royalty.
-- The same trace may later map to gratitude, credit, trust, royalty, or none.
-- Records should be machine-readable, human-auditable, and privacy-aware.
-- Minimal viable interoperability is preferred over premature completeness.
+- Keep the protocol minimal.
+- Do not overload one identifier with multiple semantic roles.
+- Separate runtime scope from meaning scope.
+- Preserve compatibility with event-level trace recording.
+- Allow future graph expansion without requiring graph completeness in v0.1.
+- Prefer interoperability over premature complexity.
+- Keep the format machine-readable and human-auditable.
+
+---
+
+## Identifier model
+
+CTR-ID v0.1 uses the following identifier classes:
+
+- `event_record_id`  
+  Identifier for a serialized record instance.
+
+- `trace_event_id`  
+  Stable identifier for the traceable event node.
+
+- `parent_trace_event_id`  
+  Preferred direct parent event when one exists.
+
+- `derived_from_trace_ids`  
+  Optional multi-source lineage references.
+
+- `communication_id`  
+  Identifier for a communication object or exchange unit.
+
+- `session_id`  
+  Runtime session identifier defined by the issuing system.
+
+- `thread_id`  
+  Runtime thread identifier defined by the issuing system.
+
+- `conversation_root_id`  
+  Stable root identifier for a larger conversation tree.
+
+- `artifact_id`  
+  Identifier for a persisted output or deliverable.
+
+- `structure_refs[].structure_id`  
+  Identifier for a higher-order meaning structure or semantic continuity anchor.
+
+---
+
+## Prefix conventions
+
+CTR-ID v0.1 currently uses these recommended prefixes:
+
+- `ctr_` for record instances
+- `ctid_` for trace events
+- `comm_` for communication objects
+- `conv_` for conversation roots
+- `art_` for artifacts
+- `sid_` for semantic structures
+
+These prefixes are not a global registry. They are a minimal interoperability convention.
 
 ---
 
@@ -85,109 +149,35 @@ That makes CTR a foundational layer for:
 ├── .github/
 │   └── workflows/
 │       └── validate-specs.yml
-├── schemas/
-│   ├── communication-trace-record-v0.1.schema.json
-│   └── ctr-id-unified-protocol-v0.1.schema.json
 ├── examples/
-│   ├── communication-trace-record.sample.json
 │   └── ctr-id-unified-protocol.sample.json
+├── schemas/
+│   └── ctr-id-unified-protocol-v0.1.schema.json
 ├── LICENSE
 ├── README.md
-└── communication-trace-record-v0.1.yaml
+└── ctr-id-unified-protocol-v0.1.yaml
 Start here
 
 Read the files in this order:
 
-communication-trace-record-v0.1.yaml
-Human-readable source specification for CTR v0.1.
-schemas/communication-trace-record-v0.1.schema.json
-Machine-validatable JSON Schema for the main Communication Trace Record format.
-examples/communication-trace-record.sample.json
-Example CTR record that should validate successfully against the main schema.
+ctr-id-unified-protocol-v0.1.yaml
+Human-readable source specification for CTR-ID v0.1.
 schemas/ctr-id-unified-protocol-v0.1.schema.json
-Machine-validatable JSON Schema for the CTR-ID interoperability profile.
+Machine-validatable JSON Schema for the protocol.
 examples/ctr-id-unified-protocol.sample.json
-Example CTR-ID record that should validate successfully against the CTR-ID schema.
+Example record that should validate successfully against the schema.
 .github/workflows/validate-specs.yml
-CI workflow that checks schema/sample consistency on every push and pull request.
-Specification overview
-
-CTR v0.1 models a communication event as a structured record with these main sections:
-
-1. Record metadata
-record_type
-spec_version
-record_id
-trace_id
-timestamps
-2. Actors
-actor
-optional counterparty
-3. Communication act
-action
-4. Input context
-input_context.sources
-context hashes
-source counts
-source references
-5. Output context
-output type
-output hashes
-artifact references
-6. Trace assessment
-trace strength
-derivation level
-novelty or transformation indicators
-return channel candidates
-7. Governance
-consent
-privacy
-retention
-access scope
-8. Settlement hooks
-optional references for downstream gratitude / trust / royalty systems
-9. Evidence
-log references
-tool run IDs
-hashes
-notes
-CTR-ID and adjacent layers
-
-CTR v0.1 is closely aligned with CTID-style trace recording, but it is specialized for communication-derived meaning generation.
-
-A useful way to see the stack is:
-
-Layer 1: Recording
-
-CTR / CTID-style trace records
-
-Layer 2: Circulation
-
-gratitude, credit, trust, royalty candidate allocation
-
-Layer 3: Governance and visibility
-
-dashboards, audit, policy, legal interpretation
-
-In that sense, CTR v0.1 is a recording-layer spec that can later feed adjacent systems such as:
-
-Gratitude Event Protocol
-Trust Event Specification
-Royalty Allocation Specification
-communication influence graphs
-audit and compliance pipelines
-
-The CTR-ID Unified Protocol exists to make identifier usage more consistent across those adjacent layers without forcing full provenance graph serialization into CTR v0.1 itself.
-
+CI workflow that checks schema/sample consistency.
 Example use cases
 
-CTR v0.1 can be used to record events such as:
+CTR-ID v0.1 can be used in cases such as:
 
-an AI summarizing a user’s conceptual note
-an agent reusing prior discussion traces in a workflow
-a system transforming retrieved documents into a structured answer
-a tool chain producing a derived artifact from multiple communication inputs
-a review pipeline marking a trace as a gratitude, credit, trust, or royalty candidate
+linking multiple communication trace events across a dialogue
+distinguishing a record instance from the underlying trace event
+connecting a trace event to a larger conversation lineage
+linking one event to multiple upstream sources
+identifying a derived artifact separately from the event that produced it
+marking semantic continuity across summary, translation, reframing, or transformation
 Schema usage
 Requirements
 Python 3.10+
@@ -197,7 +187,7 @@ Install the validator locally:
 
 python -m pip install --upgrade pip
 pip install jsonschema
-Validate all schemas and samples locally
+Validate the schema and sample locally
 
 Run the following command from the repository root:
 
@@ -207,197 +197,156 @@ import os
 import sys
 from jsonschema import Draft202012Validator
 
-validations = [
-    (
-        "Communication Trace Record v0.1",
-        "schemas/communication-trace-record-v0.1.schema.json",
-        "examples/communication-trace-record.sample.json",
-    ),
-    (
-        "CTR-ID Unified Protocol v0.1",
-        "schemas/ctr-id-unified-protocol-v0.1.schema.json",
-        "examples/ctr-id-unified-protocol.sample.json",
-    ),
-]
+label = "CTR-ID Unified Protocol v0.1"
+schema_path = "schemas/ctr-id-unified-protocol-v0.1.schema.json"
+sample_path = "examples/ctr-id-unified-protocol.sample.json"
 
 failed = False
 
-for label, schema_path, sample_path in validations:
-    print(f"\n=== Validating {label} ===")
-    print(f"Schema: {schema_path}")
-    print(f"Sample: {sample_path}")
+print(f"\n=== Validating {label} ===")
+print(f"Schema: {schema_path}")
+print(f"Sample: {sample_path}")
 
-    if not os.path.exists(schema_path):
-        print(f"ERROR: Schema file not found: {schema_path}")
-        failed = True
-        continue
+if not os.path.exists(schema_path):
+    print(f"ERROR: Schema file not found: {schema_path}")
+    failed = True
 
-    if not os.path.exists(sample_path):
-        print(f"ERROR: Sample file not found: {sample_path}")
-        failed = True
-        continue
-
-    try:
-        with open(schema_path, "r", encoding="utf-8") as f:
-            schema = json.load(f)
-    except json.JSONDecodeError as e:
-        print(f"ERROR: Invalid JSON in {schema_path}: {e}")
-        failed = True
-        continue
-
-    try:
-        with open(sample_path, "r", encoding="utf-8") as f:
-            sample = json.load(f)
-    except json.JSONDecodeError as e:
-        print(f"ERROR: Invalid JSON in {sample_path}: {e}")
-        failed = True
-        continue
-
-    try:
-        Draft202012Validator.check_schema(schema)
-    except Exception as e:
-        print(f"ERROR: Invalid schema in {schema_path}: {e}")
-        failed = True
-        continue
-
-    validator = Draft202012Validator(schema)
-    errors = sorted(validator.iter_errors(sample), key=lambda e: list(e.path))
-
-    if errors:
-        print(f"ERROR: Validation failed for {label}")
-        for err in errors:
-            path = ".".join(str(x) for x in err.path) if err.path else "<root>"
-            print(f" - {path}: {err.message}")
-        failed = True
-    else:
-        print(f"OK: {label} sample is valid.")
+if not os.path.exists(sample_path):
+    print(f"ERROR: Sample file not found: {sample_path}")
+    failed = True
 
 if failed:
     print("\nValidation failed.")
     sys.exit(1)
 
-print("\nAll validations passed.")
-PY
-Validate only the main CTR schema
-python - <<'PY'
-import json
-from jsonschema import Draft202012Validator
+try:
+    with open(schema_path, "r", encoding="utf-8") as f:
+        schema = json.load(f)
+except json.JSONDecodeError as e:
+    print(f"ERROR: Invalid JSON in {schema_path}: {e}")
+    sys.exit(1)
 
-schema_path = "schemas/communication-trace-record-v0.1.schema.json"
-sample_path = "examples/communication-trace-record.sample.json"
+try:
+    with open(sample_path, "r", encoding="utf-8") as f:
+        sample = json.load(f)
+except json.JSONDecodeError as e:
+    print(f"ERROR: Invalid JSON in {sample_path}: {e}")
+    sys.exit(1)
 
-with open(schema_path, "r", encoding="utf-8") as f:
-    schema = json.load(f)
+try:
+    Draft202012Validator.check_schema(schema)
+except Exception as e:
+    print(f"ERROR: Invalid schema in {schema_path}: {e}")
+    sys.exit(1)
 
-with open(sample_path, "r", encoding="utf-8") as f:
-    sample = json.load(f)
-
-Draft202012Validator.check_schema(schema)
 validator = Draft202012Validator(schema)
 errors = sorted(validator.iter_errors(sample), key=lambda e: list(e.path))
 
 if errors:
-    print("Validation failed:")
+    print("ERROR: Validation failed")
     for err in errors:
         path = ".".join(str(x) for x in err.path) if err.path else "<root>"
         print(f" - {path}: {err.message}")
-else:
-    print("OK: CTR sample is valid.")
-PY
-Validate only the CTR-ID schema
-python - <<'PY'
-import json
-from jsonschema import Draft202012Validator
+    sys.exit(1)
 
-schema_path = "schemas/ctr-id-unified-protocol-v0.1.schema.json"
-sample_path = "examples/ctr-id-unified-protocol.sample.json"
-
-with open(schema_path, "r", encoding="utf-8") as f:
-    schema = json.load(f)
-
-with open(sample_path, "r", encoding="utf-8") as f:
-    sample = json.load(f)
-
-Draft202012Validator.check_schema(schema)
-validator = Draft202012Validator(schema)
-errors = sorted(validator.iter_errors(sample), key=lambda e: list(e.path))
-
-if errors:
-    print("Validation failed:")
-    for err in errors:
-        path = ".".join(str(x) for x in err.path) if err.path else "<root>"
-        print(f" - {path}: {err.message}")
-else:
-    print("OK: CTR-ID sample is valid.")
+print("OK: CTR-ID Unified Protocol v0.1 sample is valid.")
 PY
 CI validation
 
-This repository also validates schema/sample pairs in GitHub Actions through:
+This repository validates the schema/sample pair in GitHub Actions through:
 
 .github/workflows/validate-specs.yml
 
-The workflow is expected to run on push and pull request events so that schema drift and sample mismatches are caught early.
+The workflow is intended to run on push and pull request events so that broken schemas, broken samples, or missing files are caught early.
 
 Validation expectations
 
-A valid CTR record should satisfy at least the following:
+A valid CTR-ID record should satisfy at least the following:
 
-record_type must be communication_trace_record
-spec_version must be v0.1
-record_id must match the CTR identifier pattern
-trace_id must match the CTID identifier pattern
-trace-strength-related numeric fields must remain within expected bounds
-return channels must be valid
-none must not be combined with other return channels
-model_name is required when actor.actor_type is ai or agent
-privacy-related fields should remain consistent with personal-data flags
-
-Some higher-order checks, such as whether source_count exactly matches the real number of sources, may be better enforced in additional test code rather than pure JSON Schema.
-
-For CTR-ID records, a valid record should satisfy at least the following:
-
-event_record_id must match the CTR-style identifier pattern
-trace_event_id must match the CTID-style identifier pattern
-optional communication / conversation / artifact / structure IDs must match their declared prefixes
+event_record_id must match the ctr_ identifier pattern
+trace_event_id must match the ctid_ identifier pattern
+parent_trace_event_id, when present, must match the ctid_ pattern
+derived_from_trace_ids, when present, must contain only ctid_ identifiers
+communication_id, when present, must match the comm_ pattern
+conversation_root_id, when present, must match the conv_ pattern
+artifact_id, when present, must match the art_ pattern
+structure_refs[*].structure_id must match the sid_ pattern
 structure_refs[*].relation must use only allowed relation values
 structure_refs[*].confidence, when present, must be between 0.0 and 1.0
+
+Some semantic checks may remain implementation-level concerns rather than pure schema constraints. For example:
+
+whether a declared parent is truly the preferred immediate lineage edge
+whether derived_from_trace_ids reflect actual upstream influence
+whether a structure_id is justified by stable semantic continuity
+Current example profile
+
+The current sample demonstrates:
+
+a CTR-style record instance ID
+a CTID-style trace event ID
+a preferred direct parent trace
+multi-source derivation
+a communication-level ID
+a conversation-root ID
+an artifact ID
+semantic structure references with relation types and confidence values
+
+This sample is intentionally minimal but sufficient for validation and downstream experimentation.
+
+Relationship to adjacent systems
+
+CTR-ID v0.1 is designed to be usable alongside trace-oriented systems such as:
+
+communication trace record formats
+attribution pipelines
+trust-event systems
+gratitude-event systems
+audit systems
+influence graph builders
+royalty candidate review systems
+
+It is not itself a royalty protocol, a trust protocol, or a provenance graph protocol.
+
+It is a small interoperability layer.
+
 Privacy note
 
-CTR is designed to be privacy-aware.
+CTR-ID is only an identifier profile.
 
 Implementations are encouraged to prefer:
 
-hashes over raw content
-references over full payload retention
-scoped identifiers over unnecessary identity exposure
-redaction-friendly storage patterns
+scoped IDs instead of excessive identity exposure
+reference-based linkage instead of unnecessary raw payload retention
+privacy-aware storage and retention policies
+clear separation between identifiers and personal content
 
-CTR should not be interpreted as a license to retain all communication content indefinitely.
+Identifier interoperability should not be treated as a justification for unlimited content retention.
 
 Current status
 Status: Draft
 Version: v0.1
 
-This version is intended as a minimal, interoperable first release for:
+This version is intended as a minimal working profile for:
 
 drafting
-testing
 schema validation
-adjacent protocol integration
+identifier interoperability testing
+downstream protocol experimentation
 
-It should be treated as a stable draft for experimentation, not as a final legal or institutional standard.
+It should be treated as a stable draft for structural use, not as a final institutional or legal standard.
 
 Roadmap
 
-Planned next steps may include:
+Possible next steps include:
 
 stricter schema refinements
 pass/fail compliance test vectors
-explicit mapping to gratitude / trust / royalty layers
+richer lineage rules
 optional signature and verification fields
-richer provenance linkage rules
-dashboard-facing aggregation guidance
-relationship documents to adjacent OS layers
+explicit mapping to adjacent trace standards
+profile documents for gratitude / trust / royalty layers
+governance notes for identifier issuance and reuse
 Contributing
 
 Contributions that improve clarity, interoperability, and validation rigor are welcome.
@@ -413,7 +362,7 @@ downstream mapping proposals
 
 When proposing changes, try to preserve the core design principle:
 
-communication is not the billing target; communication-derived meaning generation is the traceable value source
+separate record identity, event identity, communication identity, and structure identity without collapsing them into one ID
 
 License
 
@@ -421,4 +370,4 @@ This repository is distributed under the terms of the repository-level LICENSE f
 
 One-line summary
 
-CTR v0.1 is a minimal recording-layer specification for tracing how communication generates value across humans, AIs, and agents.
+CTR-ID Unified Protocol v0.1 is a minimal identifier interoperability profile for trace-aware communication systems.
