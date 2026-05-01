@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/ctr-id-unified-protocol-v0.1.schema.json",
+  "title": "CTR-ID Unified Protocol v0.1",
+  "description": "JSON Schema for the minimal interoperable identifier profile used with Communication-Trace-Record (CTR) compatible systems.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_record_id",
+    "trace_event_id"
+  ],
+  "properties": {
+    "event_record_id": {
+      "type": "string",
+      "pattern": "^ctr_[A-Za-z0-9._:-]{8,128}$",
+      "description": "Unique identifier of this serialized record instance."
+    },
+    "trace_event_id": {
+      "type": "string",
+      "pattern": "^ctid_[A-Za-z0-9._:-]{8,128}$",
+      "description": "Stable identifier of the traceable event node."
+    },
+    "parent_trace_event_id": {
+      "type": "string",
+      "pattern": "^ctid_[A-Za-z0-9._:-]{8,128}$",
+      "description": "Optional preferred direct parent trace event."
+    },
+    "derived_from_trace_ids": {
+      "type": "array",
+      "description": "Optional multi-parent lineage references for merge, synthesis, or multi-source derivation cases.",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^ctid_[A-Za-z0-9._:-]{8,128}$"
+      }
+    },
+    "communication_id": {
+      "type": "string",
+      "pattern": "^comm_[A-Za-z0-9._:-]{8,128}$",
+      "description": "Shared identifier for the communication object or exchange unit."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Runtime session identifier defined by the issuing system."
+    },
+    "thread_id": {
+      "type": "string",
+      "description": "Runtime thread identifier defined by the issuing system."
+    },
+    "conversation_root_id": {
+      "type": "string",
+      "pattern": "^conv_[A-Za-z0-9._:-]{8,128}$",
+      "description": "Root identifier for the larger conversation tree."
+    },
+    "artifact_id": {
+      "type": "string",
+      "pattern": "^art_[A-Za-z0-9._:-]{8,128}$",
+      "description": "Optional identifier for a persisted output artifact."
+    },
+    "structure_refs": {
+      "type": "array",
+      "description": "Optional references to higher-order meaning structures or semantic continuity anchors.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "structure_id",
+          "relation"
+        ],
+        "properties": {
+          "structure_id": {
+            "type": "string",
+            "pattern": "^sid_[A-Za-z0-9._:-]{8,128}$",
+            "description": "Identifier for a higher-order meaning structure."
+          },
+          "relation": {
+            "type": "string",
+            "enum": [
+              "originates",
+              "references",
+              "refines",
+              "transforms",
+              "summarizes",
+              "translates",
+              "critiques",
+              "merges",
+              "branches_from",
+              "instantiates"
+            ],
+            "description": "Declared relation between the trace event and the referenced structure."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "primary_subject",
+              "secondary_subject",
+              "inherited_pattern",
+              "target_structure",
+              "output_structure"
+            ],
+            "description": "Optional semantic role of the structure reference."
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Optional confidence score for the asserted structure relation."
+          },
+          "note": {
+            "type": "string",
+            "description": "Optional human-readable note about the structure reference."
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "event_record_id": "ctr_01JTK9R8M5A2X1QY7Z",
+      "trace_event_id": "ctid_01JTK9R8TRACEABC123",
+      "parent_trace_event_id": "ctid_01JTK9R7ROOTABC001",
+      "derived_from_trace_ids": [
+        "ctid_01JTK9R6NOTEINPUT777",
+        "ctid_01JTK9R7ROOTABC001"
+      ],
+      "communication_id": "comm_note_thread_20260502_01",
+      "session_id": "sess_20260502_001",
+      "thread_id": "thread_note_draft_01",
+      "conversation_root_id": "conv_communication_royalty_os_01",
+      "artifact_id": "art_note_draft_summary_01",
+      "structure_refs": [
+        {
+          "structure_id": "sid_communication_royalty_os_core",
+          "relation": "refines",
+          "role": "primary_subject",
+          "confidence": 0.93,
+          "note": "Core semantic structure persists across summary transformation."
+        },
+        {
+          "structure_id": "sid_trace_layer_architecture",
+          "relation": "references",
+          "role": "inherited_pattern",
+          "confidence": 0.74,
+          "note": "Event reuses prior trace-layer framing."
+        }
+      ]
+    }
+  ]
+}
