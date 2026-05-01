@@ -1,0 +1,30 @@
+{
+  "event_record_id": "ctr_01JTK9R8M5A2X1QY7Z",
+  "trace_event_id": "ctid_01JTK9R8TRACEABC123",
+  "parent_trace_event_id": "ctid_01JTK9R7ROOTABC001",
+  "derived_from_trace_ids": [
+    "ctid_01JTK9R6NOTEINPUT777",
+    "ctid_01JTK9R7ROOTABC001"
+  ],
+  "communication_id": "comm_note_thread_20260502_01",
+  "session_id": "sess_20260502_001",
+  "thread_id": "thread_note_draft_01",
+  "conversation_root_id": "conv_communication_royalty_os_01",
+  "artifact_id": "art_note_draft_summary_01",
+  "structure_refs": [
+    {
+      "structure_id": "sid_communication_royalty_os_core",
+      "relation": "refines",
+      "role": "primary_subject",
+      "confidence": 0.93,
+      "note": "Core semantic structure persists across summary transformation."
+    },
+    {
+      "structure_id": "sid_trace_layer_architecture",
+      "relation": "references",
+      "role": "inherited_pattern",
+      "confidence": 0.74,
+      "note": "Event reuses prior trace-layer framing."
+    }
+  ]
+}
