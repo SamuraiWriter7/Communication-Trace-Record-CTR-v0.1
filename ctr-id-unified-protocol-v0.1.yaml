@@ -1,0 +1,360 @@
+spec:
+  name: CTR-ID Unified Protocol
+  short_name: CTR-ID
+  file_name: ctr-id-unified-protocol-v0.1.yaml
+  version: v0.1
+  status: draft
+  authors:
+    - Shidenkai Alpha
+  language: en
+  license: MIT
+  created_at: 2026-05-02
+  updated_at: 2026-05-02
+
+  summary:
+    one_line: >
+      CTR-ID v0.1 defines a minimal interoperable identifier profile for linking
+      communication trace records across events, sessions, threads, conversations,
+      structures, and downstream circulation systems.
+
+  purpose: >
+    This protocol standardizes how identifiers are assigned and interpreted across
+    CTR-compatible communication trace records, so that trace events can be linked
+    consistently without forcing full provenance graph serialization into the core
+    CTR record itself.
+
+  relationship_to_ctr: >
+    CTR-ID v0.1 is an adjunct protocol for CTR v0.1. It does not replace CTR
+    fields such as record_id, trace_id, parent_trace_id, session_id, or thread_id.
+    Instead, it clarifies their semantic roles and adds interoperable IDs for
+    communication scope and structure scope.
+
+  design_principles:
+    - Preserve CTR minimalism.
+    - Do not overload one identifier with multiple semantic roles.
+    - Separate runtime scope from meaning scope.
+    - Support event-level traceability first.
+    - Allow future graph expansion without forcing graph completeness in v0.1.
+    - Remain compatible with gratitude, trust, audit, attribution, and royalty layers.
+    - Prefer stable IDs for meaning continuity and local IDs for system operations.
+
+  non_goals:
+    - Identity verification infrastructure
+    - Cryptographic signature infrastructure
+    - Full provenance graph serialization
+    - Legal ownership determination
+    - Monetary settlement logic
+    - Mandatory global registry in v0.1
+
+core_concepts:
+  event_record_id: >
+    Identifier of a specific serialized record instance.
+  trace_event_id: >
+    Stable identifier of the traceable communication event node.
+  communication_id: >
+    Identifier for the communication object or exchange unit being referenced
+    across systems, such as a message, utterance, or prompt-response act.
+  conversation_root_id: >
+    Identifier for the root conversation tree to which a thread belongs.
+  structure_id: >
+    Identifier for a higher-order meaning structure, concept cluster,
+    semantic pattern, or evolving idea reused across multiple events.
+  artifact_id: >
+    Identifier for a derived artifact, output object, or persisted deliverable.
+  lineage_edge: >
+    A declared relationship between one trace event and another, or between
+    a trace event and a structure.
+
+identifier_model:
+  prefixes:
+    event_record_id: "ctr_"
+    trace_event_id: "ctid_"
+    communication_id: "comm_"
+    conversation_root_id: "conv_"
+    structure_id: "sid_"
+    artifact_id: "art_"
+
+  layers:
+    - name: record_instance_layer
+      canonical_field: record_id
+      identifier: event_record_id
+      prefix: ctr_
+      meaning: >
+        Unique identifier for one serialized CTR record instance.
+      stability: immutable_per_record_instance
+      cardinality: one_per_record
+
+    - name: trace_event_layer
+      canonical_field: trace_id
+      identifier: trace_event_id
+      prefix: ctid_
+      meaning: >
+        Stable identifier for the communication-derived trace event itself.
+      stability: stable_across_re-serialization
+      cardinality: one_per_trace_event
+
+    - name: direct_parent_layer
+      canonical_field: parent_trace_id
+      identifier: parent_trace_event_id
+      prefix: ctid_
+      meaning: >
+        Preferred direct parent when a primary immediate upstream event exists.
+      stability: stable_if_declared
+      cardinality: zero_or_one_per_trace_event
+
+    - name: communication_scope_layer
+      canonical_field: communication_id
+      identifier: communication_id
+      prefix: comm_
+      meaning: >
+        Shared ID for the same communication object referenced across records,
+        systems, or transforms.
+      stability: stable_across_system_boundaries
+      cardinality: zero_or_one_per_trace_event
+
+    - name: runtime_scope_layer
+      canonical_fields:
+        - session_id
+        - thread_id
+      meaning: >
+        Local operational scope identifiers for execution or conversation flow.
+      stability: system_defined
+      cardinality: optional
+
+    - name: conversation_scope_layer
+      canonical_field: conversation_root_id
+      identifier: conversation_root_id
+      prefix: conv_
+      meaning: >
+        Stable root anchor for an entire conversation tree or dialogue lineage.
+      stability: stable_across_thread_splits_and_merges
+      cardinality: zero_or_one_per_trace_event
+
+    - name: structure_scope_layer
+      canonical_field: structure_refs
+      identifier: structure_id
+      prefix: sid_
+      meaning: >
+        Identifier for higher-order meaning continuity that survives summarization,
+        translation, transformation, or reframing.
+      stability: stable_across_semantic_variation
+      cardinality: zero_to_many_per_trace_event
+
+    - name: artifact_scope_layer
+      canonical_field: artifact_id
+      identifier: artifact_id
+      prefix: art_
+      meaning: >
+        Identifier for a persisted output artifact or deliverable.
+      stability: stable_per_artifact
+      cardinality: zero_or_one_per_trace_event
+
+record_profile:
+  type: object
+  additionalProperties: false
+  required:
+    - event_record_id
+    - trace_event_id
+
+  properties:
+    event_record_id:
+      type: string
+      pattern: "^ctr_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Unique ID of this serialized record instance.
+
+    trace_event_id:
+      type: string
+      pattern: "^ctid_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Stable ID of the traceable event node.
+
+    parent_trace_event_id:
+      type: string
+      pattern: "^ctid_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Optional preferred direct parent trace event.
+
+    derived_from_trace_ids:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        pattern: "^ctid_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Optional multi-parent lineage references for merge, synthesis, or
+        multi-source derivation cases.
+
+    communication_id:
+      type: string
+      pattern: "^comm_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Shared identifier for the communication object or exchange unit.
+
+    session_id:
+      type: string
+      description: >
+        Runtime session identifier defined by the issuing system.
+
+    thread_id:
+      type: string
+      description: >
+        Runtime thread identifier defined by the issuing system.
+
+    conversation_root_id:
+      type: string
+      pattern: "^conv_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Root identifier for the larger conversation tree.
+
+    artifact_id:
+      type: string
+      pattern: "^art_[A-Za-z0-9._:-]{8,128}$"
+      description: >
+        Optional identifier for a persisted output artifact.
+
+    structure_refs:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        required:
+          - structure_id
+          - relation
+        properties:
+          structure_id:
+            type: string
+            pattern: "^sid_[A-Za-z0-9._:-]{8,128}$"
+          relation:
+            type: string
+            enum:
+              - originates
+              - references
+              - refines
+              - transforms
+              - summarizes
+              - translates
+              - critiques
+              - merges
+              - branches_from
+              - instantiates
+          role:
+            type: string
+            enum:
+              - primary_subject
+              - secondary_subject
+              - inherited_pattern
+              - target_structure
+              - output_structure
+          confidence:
+            type: number
+            minimum: 0.0
+            maximum: 1.0
+          note:
+            type: string
+
+semantics:
+  interpretation_rules:
+    - >
+      event_record_id identifies a record instance, not the underlying meaning event.
+    - >
+      trace_event_id identifies the trace event node and should remain stable across
+      re-export, re-serialization, and format conversion.
+    - >
+      parent_trace_event_id expresses the preferred immediate lineage edge.
+    - >
+      derived_from_trace_ids is used when more than one upstream trace materially
+      shaped the current event.
+    - >
+      communication_id identifies the exchange object, not the abstract idea.
+    - >
+      conversation_root_id groups records into a larger conversation lineage even if
+      thread_id changes across systems.
+    - >
+      structure_id identifies semantic continuity that may survive summarization,
+      reframing, translation, or modality change.
+    - >
+      artifact_id identifies a persisted output object rather than the event that created it.
+
+  separation_rules:
+    - >
+      session_id and thread_id are operational scope IDs and must not be treated as
+      substitutes for structure_id.
+    - >
+      communication_id and structure_id must not be assumed equivalent.
+    - >
+      A single communication_id may map to multiple trace_event_id values when
+      different systems record different transformations of the same communication object.
+    - >
+      A single structure_id may recur across many trace_event_id values over time.
+
+interoperability:
+  ctr_field_mapping:
+    record_id: event_record_id
+    trace_id: trace_event_id
+    parent_trace_id: parent_trace_event_id
+    session_id: session_id
+    thread_id: thread_id
+
+  optional_ctr_extensions:
+    - communication_id
+    - conversation_root_id
+    - artifact_id
+    - structure_refs
+    - derived_from_trace_ids
+
+  downstream_compatibility:
+    - Gratitude Event Protocol
+    - Trust Event Specification
+    - Royalty Allocation Specification
+    - Influence graph builders
+    - Audit and compliance pipelines
+
+validation_notes:
+  - record_id and trace_id semantics must remain distinct.
+  - parent_trace_event_id should not duplicate trace_event_id.
+  - derived_from_trace_ids should not include trace_event_id itself.
+  - none of the ID fields should be reused across incompatible object classes.
+  - structure_refs may be empty when no stable semantic continuity is claimed.
+  - communication_id is recommended when cross-system replay or reuse is expected.
+  - conversation_root_id is recommended for multi-step dialogue systems.
+  - artifact_id is recommended when persisted outputs are expected to circulate.
+
+recommended_generation_policy:
+  local_generation:
+    event_record_id: >
+      Generated by the issuing system at serialization time.
+    trace_event_id: >
+      Generated when a traceable event node is first recognized.
+    communication_id: >
+      Generated when the communication object needs stable cross-record reference.
+    conversation_root_id: >
+      Generated when a conversation tree begins or is imported.
+    structure_id: >
+      Generated only when semantic continuity is intentionally asserted.
+    artifact_id: >
+      Generated when output persistence or downstream circulation is intended.
+
+example_profile:
+  event_record_id: ctr_01JTK9R8M5A2X1QY7Z
+  trace_event_id: ctid_01JTK9R8TRACEABC123
+  parent_trace_event_id: ctid_01JTK9R7ROOTABC001
+  derived_from_trace_ids:
+    - ctid_01JTK9R6NOTEINPUT777
+    - ctid_01JTK9R7ROOTABC001
+  communication_id: comm_note_thread_20260502_01
+  session_id: sess_20260502_001
+  thread_id: thread_note_draft_01
+  conversation_root_id: conv_communication_royalty_os_01
+  artifact_id: art_note_draft_summary_01
+  structure_refs:
+    - structure_id: sid_communication_royalty_os_core
+      relation: refines
+      role: primary_subject
+      confidence: 0.93
+      note: Core semantic structure persists across summary transformation.
+    - structure_id: sid_trace_layer_architecture
+      relation: references
+      role: inherited_pattern
+      confidence: 0.74
+      note: Event reuses prior trace-layer framing.
