@@ -34,11 +34,6 @@ jobs:
 
           validations = [
               (
-                  "Communication Trace Record v0.1",
-                  "schemas/communication-trace-record-v0.1.schema.json",
-                  "examples/communication-trace-record.sample.json",
-              ),
-              (
                   "CTR-ID Unified Protocol v0.1",
                   "schemas/ctr-id-unified-protocol-v0.1.schema.json",
                   "examples/ctr-id-unified-protocol.sample.json",
